@@ -1,0 +1,110 @@
+#!/bin/bash
+
+[ ! -f "/usr/bin/task" ] && return 0
+
+#TASKRC="${HOME}/.config/task"
+TASKDB_NAME=".task" 
+TASKDB_DEFAULT_LOCATION="${HOME}" 
+TASK_OPTIONS="" 
+TASKDB= 
+export TASKDB 
+
+set_nearest_task_file() 
+{
+    # Set TASKDB to nearest parent task file
+    TASKDB=$( rfind -name ${TASKDB_NAME} )
+    # If there isn't one, set to default
+    if [ -z "${TASKDB}" ]; then
+        TASKDB="${TASKDB_DEFAULT_LOCATION}/${TASKDB_NAME}"
+    fi
+}
+
+set_nearest_active_file() 
+{
+    ACTIVEDB="${TASKDB}.active"
+}
+
+task() 
+{
+    # Don't print DB notice for .task in current dir
+    if test "${TASKDB}" != "./${TASKDB_NAME}" -a "${TASKDB}" != "$(pwd)/${TASKDB_NAME}"; then
+        # Output DB notice since we're using a 'foreign' database. Use STDERR so we don't fuck with output 
+        # parsers
+        echo "Using database ${TASKDB}" 1>&2
+    fi
+    # Specify found DB
+    /usr/bin/task rc.data.location:${TASKDB} ${TASK_OPTIONS} $@
+    #/usr/bin/task rc:${TASKRC} rc.data.location:${TASKDB} ${TASK_OPTIONS} $@
+}
+
+#t() {
+#    # If no arg provided, cat current task
+#    if [ "$*" == "" ] ; then
+#        if [ -f "${ACTIVEDB}" ]; then
+#            cat ${ACTIVEDB} fi
+#    # Otherwise set current task
+#    else
+#        td $@ | tee ${ACTIVEDB} fi
+#}
+
+alias t="task" 
+alias td="task list" 
+alias tl="task list" 
+alias tlo="task long" 
+alias tda="task add" 
+alias tdd="task done" 
+alias tde="task edit" 
+alias tdrm="task delete"
+
+#tdd() 
+#{
+#    task done $@
+##    if [ -f ${ACTIVEDB} ]; then
+##        rm -f ${ACTIVEDB} fi
+#}
+
+cd() 
+{
+  if builtin cd "$@"; then
+    set_nearest_task_file
+    set_nearest_active_file
+    if [ -e ${TASKDB_NAME} ]; then
+      task
+    fi
+  fi
+}
+
+pushd() 
+{
+  if builtin pushd "$@"; then
+    set_nearest_task_file
+    set_nearest_active_file
+    if [ -e ${TASKDB_NAME} ]; then
+      task
+    fi
+  fi
+}
+
+popd() 
+{
+  if builtin popd "$@"; then
+    set_nearest_task_file
+    set_nearest_active_file
+    if [ -e ${TASKDB_NAME} ]; then
+      task
+    fi
+  fi
+}
+
+mktodo() 
+{
+    mkdir ${TASKDB_NAME}
+    set_nearest_task_file
+    set_nearest_active_file
+}
+
+# Initial setting of files
+set_nearest_task_file set_nearest_active_file
+
+# Call on new terminal
+[ -e ${TASKDB} ] && task minimal

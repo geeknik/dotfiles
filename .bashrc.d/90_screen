@@ -1,0 +1,44 @@
+#!/bin/bash
+
+function screen_is_inside 
+{
+    if [ "${STY}" = "" ]; then
+    return 1
+    else
+    return 0
+    fi
+} 
+
+if [ $( screen_is_inside ) ]; then
+
+    function screen_name
+    {
+        echo $STY | sed -e "s/\w*\.\(.*\)/\1/" \
+                        -e "s/\(.*\)\.`hostname`/\1/"
+    }
+    function screen_is_custom
+    {
+        if $(echo ${STY} | grep $(hostname) 1>/dev/null 2>&1); then
+            return 1
+        else
+            return 0
+        fi
+    
+    }
+    function screen_get_caption
+    {
+        grep .screenrc -e "^caption" | sed -e 's/.*"\(.*\)"/\1/'
+    }
+    
+    function screen_set_caption
+    {
+        screen -X caption always "$(screen_get_caption)%-`expr length $(screen_name)``screen_name`"
+    }
+    if [ $(screen_is_custom) = "true" ]; then
+        #screen_set_caption
+        export HISTFILE=${HOME}/.bash_history.d/$(hostname)-$(screen_name).history
+    fi 
+
+else
+    unset screen_is_inside 
+fi

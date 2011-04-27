@@ -1,0 +1,21 @@
+#!/bin/bash
+
+mcd() 
+{
+    mkdir -p "${1}" && \
+    cd "${1}"
+}
+
+rfind() 
+{
+    rfind_path="${PWD}"
+    rfind_result=''
+    while [ "${rfind_path}" != '/' ]; do
+        rfind_result="$( find "${rfind_path}" / -maxdepth 1 $@ -print -quit)"
+        if [ -n "${rfind_result}" ]; then
+            echo "${rfind_result}"
+            break
+        fi
+        rfind_path=$(dirname "${rfind_path}")
+    done
+}

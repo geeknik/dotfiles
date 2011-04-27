@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Debian packaging
+if [ -x "/usr/bin/debuild" ]; then
+    alias dch='dch -D ${DISTRO_VERSION}'
+    alias dbp='debuild -i\.git/ -I.git'
+    alias dbs='dbp -S -sa'
+    alias dps='dput ppa *_source.changes'
+    alias dpsd='dput *_source.changes'
+    alias rmdeb='rm -f *.build *.changes *.dsc *.deb *.upload *.diff.gz'
+    alias gbp='git-buildpackage --git-tag'
+    
+    if [ -x '/usr/bin/lsb_release' ]; then
+        export DISTRO=$( '/usr/bin/lsb_release' -is )
+        export DISTRO_VERSION=$( '/usr/bin/lsb_release' -cs )
+    fi
+    if [ -x '/usr/bin/dpkg-architecture' ]; then
+        export DISTRO_ARCH=$( '/usr/bin/dpkg-architecture' -qDEB_BUILD_ARCH )
+    fi 
+fi

@@ -1,0 +1,119 @@
+#!/bin/bash
+
+[ ! -f "/usr/bin/devtodo" ] && return 0 
+
+return 0 
+
+TODORC="${HOME}/.config/devtodo" 
+TODODB_DEFAULT="${HOME}/.todo" 
+TODO_OPTIONS='--timeout --summary' 
+
+set_nearest_todo_file() 
+{
+    # Set TODODB to nearest parent todo file
+    TODODB=$( rfind -name .todo -type f )
+    # If there isn't one, set to default
+    if [ -z "${TODODB}" ]; then
+        TODODB="${TODODB_DEFAULT}"
+    fi
+}
+
+set_nearest_task_file() 
+{
+    TASKDB="${TODODB}.active"
+}
+
+td() 
+{
+    # Don't print DB notice for .todo in current dir
+    if test "${TODODB}" != './.todo' -a "${TODODB}" != "$(pwd)/.todo"; then
+        # Output DB notice since we're using a 'foreign' database. Use STDERR so we don't fuck with output 
+        # parsers
+        echo "Using database ${TODODB}" 1>&2
+    fi
+    # Specify found DB
+    devtodo --database ${TODODB} $@
+}
+
+t() 
+{
+    # If no arg provided, cat current task
+    if [ "$*" == '' ] ; then
+        if [ -f "${TASKDB}" ]; then
+            cat ${TASKDB}
+        fi
+    # Otherwise set current task
+    else
+        td $@ | tee ${TASKDB}
+    fi
+}
+
+tda() 
+{
+    /usr/bin/tda --database ${TODODB} $@
+}
+
+tdd() 
+{
+    /usr/bin/tdd --database ${TODODB} $@
+    if [ -f ${TASKDB} ]; then
+        rm -f ${TASKDB}
+    fi
+}
+
+tde() 
+{
+    /usr/bin/tde --database ${TODODB} $@
+}
+
+tdr() 
+{
+    /usr/bin/tdr --database ${TODODB} $@
+}
+
+cd() 
+{
+  if builtin cd "$@"; then
+    set_nearest_todo_file
+    set_nearest_task_file
+    if [ -f .todo ]; then
+      devtodo ${TODO_OPTIONS}
+    fi
+  fi
+}
+
+pushd() 
+{
+  if builtin pushd "$@"; then
+    set_nearest_todo_file
+    set_nearest_task_file
+    if [ -f .todo ]; then
+      devtodo ${TODO_OPTIONS}
+    fi
+  fi
+}
+
+popd() 
+{
+  if builtin popd "$@"; then
+    set_nearest_todo_file
+    set_nearest_task_file
+    if [ -f .todo ]; then
+      devtodo ${TODO_OPTIONS}
+    fi
+  fi
+}
+
+mktodo() 
+{
+    touch .todo
+    set_nearest_todo_file
+    set_nearest_task_file
+}
+
+# Initial setting of files
+set_nearest_todo_file 
+set_nearest_task_file
+
+# Call td on new terminal
+td

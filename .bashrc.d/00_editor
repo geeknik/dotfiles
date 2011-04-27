@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Set EDITOR
+if [ -x '/usr/bin/vim' ]; then
+    export EDITOR='/usr/bin/vim' 
+elif [ -x '/usr/bin/vi' ]; then
+    export EDITOR='/usr/bin/vi' 
+fi

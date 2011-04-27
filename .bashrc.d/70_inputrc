@@ -1,0 +1,4 @@
+#!/bin/bash
+#
+# inputrc for key input
+[ -f "${HOME}/.inputrc" ] && export INPUTRC="${HOME}/.inputrc"

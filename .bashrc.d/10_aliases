@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#################################################
+## Frequently used options and shortcuts
+
+alias go='gnome-open' 
+alias scr='screen -DR' 
+alias m="scr main -c ~/.screenrc-main" 
+alias g='git' 
+alias sgit='sudo -E git' 
+alias gka='gitk --all &'
+
+# Virtualization Monitoring
+alias vtop='virt-top -c qemu:///system'
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    if [ -e "${HOME}/.dircolors" ]; then
+        eval "$(dircolors -b ~/.dircolors)"
+    else
+        eval "$(dircolors -b)"
+    fi
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto' fi
+
+# some more ls aliases
+alias ll='ls -AlF' 
+alias la='ls -A'
+alias l='ls -CF'

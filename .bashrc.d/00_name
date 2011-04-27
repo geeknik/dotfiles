@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export NAME='My Name' 
+export EMAIL='me@example.com'
+export DEBEMAIL="${EMAIL}"

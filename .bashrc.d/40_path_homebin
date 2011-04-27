@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Set extra paths
+for dir in ~/.local/bin \
+            ~/bin do
+    if [ -d "${dir}" ] ; then
+        export PATH="${dir}:$PATH"
+    fi 
+done
