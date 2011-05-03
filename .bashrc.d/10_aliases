@@ -3,11 +3,11 @@
 #################################################
 ## Frequently used options and shortcuts
 
-alias go='gnome-open' 
-alias scr='screen -DR' 
-alias m="scr main -c ~/.screenrc-main" 
-alias g='git' 
-alias sgit='sudo -E git' 
+alias go='gnome-open'
+alias scr='screen -DR'
+alias m="scr main -c ~/.screenrc-main"
+alias g='git'
+alias sgit='sudo -E git'
 alias gka='gitk --all &'
 
 # Virtualization Monitoring
@@ -23,9 +23,10 @@ if [ -x /usr/bin/dircolors ]; then
     alias ls='ls --color=auto'
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto' fi
+    alias egrep='egrep --color=auto'
+fi
 
 # some more ls aliases
-alias ll='ls -AlF' 
+alias ll='ls -AlF'
 alias la='ls -A'
 alias l='ls -CF'
