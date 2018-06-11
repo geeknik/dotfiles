@@ -1,10 +1,11 @@
-startup_message off
-vbell off
-defscrollback 8000
-autodetach on
-defutf8 on
-
+# the following two lines give a two-line status, with the current window highlighted
 hardstatus alwayslastline
-hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %c | %1`%{-}'
+hardstatus string '%{= kG}[%{G}%H%? %1`%?%{g}][%= %{= kw}%-w%{+b yk} %n*%t%?(%u)%? %{-}%+w %=%{g}][%{B}%m/%d %{W}%C%A%{g}]'
 
-screen -t shell 0 bash
+# no welcome message
+startup_message off
+
+# 256 colors
+attrcolor b ".I"
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce on
